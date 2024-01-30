@@ -1,0 +1,143 @@
+# GraphQL schema example
+#
+# https://gqlgen.com/getting-started/
+
+
+type Chapter {
+  cid: Int!
+  pages: Int!
+  duration: Int!
+}
+
+type Book {
+  id: String!
+  author: String!
+  title: String!
+  publication_year: Int!
+}
+
+type BookDetails {
+  id: String!
+  author: String!
+  title: String!
+  publication_year: Int!
+  chapter: [Chapter]  # @goField(forceResolver: true) is built-in indirectives by gqlgen that allow us to force generate a resolver
+}
+
+type Time {
+  unixTime: Int!
+  timeStamp: String!
+}
+
+type Subscription {
+  currentTime: Time!
+}
+
+directive @isAuthenticated on FIELD_DEFINITION
+
+directive @hasRole(role: Role!) on FIELD_DEFINITION
+
+enum Role {
+    ADMIN
+    USER
+}
+
+
+type Query{
+  book(id: String!): Book
+  books: [Book!]!
+  getBooksWithLimitOffset(limit: Int!, offset: Int!): [Book!]!
+  bookWithChapter(id: String!): BookDetails!
+  booksWithChapters(ids: [String!]!): [BookDetails!]!
+  getBooksWithIds(ids: [String!]!): [Book!]!
+  getCurrentTime: Subscription!
+  totalBooks(id: String!): TotalBooks!
+  getUser(id: Int!): User @isAuthenticated  
+  getUsers: [User!]! @isAuthenticated @hasRole(role: ADMIN)
+}
+
+
+input newBook{
+  title: String!
+  author: String!
+  publicationYear: Int!
+}
+
+type DeletedBook{
+  id: String!
+}
+
+input updateBook{
+  id: String!
+  title: String!
+  author: String!
+  publicationYear: Int!
+}
+
+type updatedBook{
+  id: String!
+  title: String!
+  author: String!
+  publicationYear: Int!
+}
+
+type User {
+  id: Int!
+  username: String!
+  email: String!
+  password: String!
+}
+
+input newUser{
+  username: String!
+  email: String!
+  password: String!
+}
+
+type LoginDetails {
+  isLoggedIn: Boolean
+  token: String!
+}
+
+type Mutation{
+  createBook(input: newBook!): Book!
+  deleteBook(id: String!): DeletedBook!
+  updateBook(input: updateBook!): updatedBook!
+  createUser(input: newUser!): User!
+  loginUser(email: String!, password: String!): LoginDetails!
+}
+
+
+
+
+
+
+
+
+
+# pagination : cursor-based pagination
+type BookConnection {
+  edges: [BookEdges!]!
+  pageInfo: PageInfo!
+}
+
+type BookEdges {
+  cursor: String!
+  node: Book
+}
+
+type PageInfo {
+  startCursor: String!
+  endCursor: String!
+  hasNextPage: Boolean
+}
+
+
+type TotalBooks {
+  id: String!
+  author: String!
+  title: String!
+  publication_year: Int!
+  bookConnection(first: Int = 10, after: String): BookConnection
+}
+
