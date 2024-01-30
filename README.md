@@ -28,12 +28,15 @@ Still not convinced enough to use **gqlgen**? Compare **gqlgen** with other Go g
 
 4. Create Schema in schema.graphql file as below example (schema reference : https://graphql.org/learn/schema/)
 
+```graphql
       type Book {
         id: String!
         author: String!
         title: String!
         publication_year: Int!
        }  
+```
+
 5. Start the graphql server
 
        go run server.go
@@ -117,4 +120,4 @@ enum Role {
 - https://gqlgen.com/
 - https://github.com/99designs/gqlgengqlgen-a-graphql-server-generator-for-go/)
 
-copy reference : [https://github.com/99designs/gqlgen](https://github.com/99designs/gqlgen?tab=readme-ov-file)https://github.com/99designs/gqlgen?tab=readme-ov-file
+copy reference : [link](https://github.com/99designs/gqlgen?tab=readme-ov-file)
