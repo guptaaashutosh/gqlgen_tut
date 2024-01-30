@@ -77,7 +77,5 @@ func LoginUserController(ctx context.Context, DB *pgxpool.Pool, email string, pa
 		LoginDetails.Token = loggedInToken
 		return &LoginDetails, err
 	}
-	// token should store in cookie
-
 	return &LoginDetails, nil
 }

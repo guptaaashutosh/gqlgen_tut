@@ -25,7 +25,6 @@ import (
 const defaultPort = "8080"
 
 func main() {
-	//to load env
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatal("Error loading .env file")
@@ -39,7 +38,6 @@ func main() {
 	router := chi.NewRouter()
 	db := dbsetup.ConnectDB()
 
-	// router.Use(middleware.AuthenticateUser())
 	router.Use(middleware.UserMiddleware())
 
 	resolver := &graph.Resolver{
@@ -75,16 +73,10 @@ func main() {
 
 	es := graph.NewExecutableSchema(resolverConfig)
 	var srv http.Handler = handler.NewDefaultServer(es) // by default NewDefaultServer have transport connection with websocket
-	// var srv = handler.NewDefaultServer(es)
 
-	//#2 way of query complexity : 1. FixedComplexityLimit, 2.custom complexity
-	//Now any query with complexity greater than 8 is rejected by the API.
-	// srv.Use(extension.FixedComplexityLimit(8))
-
-	// adding dataloader middleware to server
+	// adding dataloader middleware
 	srv = loaders.Middleware(db, srv)
 
-	// Serve GraphQL Playground and GraphQL queries
 	router.Handle("/playground", playground.Handler("GraphQL playground", "/query"))
 	router.Handle("/query", srv)
 

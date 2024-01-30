@@ -27,9 +27,6 @@ func GetBooks(ctx context.Context, DB *pgxpool.Pool) ([]*model.Book, error) {
 	return books, nil
 }
 
-
-
-//GetBooksUsingLimitOffset
 func GetBooksUsingLimitOffset(ctx context.Context, DB *pgxpool.Pool, limit int, offset int) ([]*model.Book, error)  {
 	var books []*model.Book
 	rows, err := DB.Query(ctx, "select id, title, author, publication_year from book limit $1 offset $2",limit,offset)
